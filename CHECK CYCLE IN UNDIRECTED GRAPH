@@ -1,0 +1,56 @@
+https://sapphireengine.com/@/vychk4
+
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+int a[100][100];
+int n;
+
+bool dfs(int i, int parent , bool *visited){
+    visited[i]=true;
+
+    for(int j=0;j<n;j++){
+        if(a[i][j]==1){
+         if(!visited[j]){
+            if(dfs(j,i,visited))
+       return true;
+        }
+        else if(j!=parent)
+            return true;
+    }}
+    
+    return false;
+    
+}
+
+bool checkcycle( bool *visited){
+  
+  
+    for(int i=0;i<n;i++){
+        if(!visited[i])
+            if(dfs(i,-1,visited)){
+                 return true;}
+          }
+    return false;
+}
+int main(){
+   // cin>>n;
+    int t;
+    cin>>n>>t;
+    
+    bool visited[n]={0};
+    
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+        a[i][j]=0;
+    }}
+    
+    int x,y;
+    while(t--){
+       cin>>x>>y;
+        a[x][y]=1;
+        a[y][x]=1;
+    }
+    cout<<checkcycle(visited)<<endl;
+    
+}
