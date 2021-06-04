@@ -1,0 +1,67 @@
+
+**///https://sapphireengine.com/@/m7y9dl///***
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+int a[100][100];
+int n;
+
+bool dfs(int i, bool *visited, bool *inloop){
+    visited[i]=true;
+    inloop[i]=true;
+    for(int j=0;j<n;j++){
+        if(a[i][j]==1)
+        
+        if(!visited[j]){
+            bool y=dfs(j,visited,inloop);
+        if(y==true){
+            return true;
+        }}
+        else if(inloop[j])
+            return true;
+    }
+    inloop[i]=0;
+    return false;
+    
+}
+
+bool checkcycle( bool *visited){
+   bool inloop[n]={0};
+  
+    for(int i=0;i<n;i++){
+        if(!visited[i]){
+            bool c= dfs(i,visited,inloop);
+                if(c==true)
+                    return true;
+            }
+    }
+    return false;
+}
+int main(){
+    cin>>n;
+    
+    bool visited[n]={0};
+    
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+        a[i][j]=0;
+    }}
+    int t;
+    cin>>t;
+    int x,y;
+    while(t--){
+       cin>>x>>y;
+        a[x][y]=1;
+    }
+    cout<<checkcycle(visited)<<endl;
+    
+}
+
+4 6
+0 1
+0 2
+1 2
+2 0
+2 3
+3 3
+ANS=1
