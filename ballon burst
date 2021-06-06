@@ -1,0 +1,38 @@
+link https://sapphireengine.com/@/wfxzpj
+#include<bits/stdc++.h>
+using namespace std;
+int dp[100][100];
+int solve(int a[],int n){
+    for(int len=1;len<=n;len++){
+        for(int i=1;i<=n-len+1;i++){
+            int j=i+len-1;
+            for(int k=i;k<=j;k++){
+               
+          int leftnum= i==1?1:a[i-1];
+          int rightnum=j==n?1:a[j+1];
+                
+                int left = k==i?0:dp[i][k-1];
+                int right = k==j?0:dp[k+1][j];
+                dp[i][j]=max(dp[i][j],leftnum*a[k]*rightnum +left+right);
+            }
+            
+        }
+    }
+    return dp[1][n];
+}
+int main(){
+    int n;
+    cin>>n;
+    int a[n+2];
+    a[0]=1;
+    a[n+1]=1;
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
+    }
+    memset(dp,0,sizeof(dp));
+    cout<<solve(a,n)<<endl;
+    return 0;
+}
+
+test case 1 2 3 4 -> 40
+test case 3 1 5 8 ->167
