@@ -1,0 +1,236 @@
+#include<iostream>
+using namespace std;
+int row,col,X,Y,L;
+int map[1000][1000],visited[1000][1000];
+struct node{
+    int x,y,l;
+};
+node q[1000000];
+int front,back;
+void init(){
+    front=0,back=0;
+}
+void push(node temp){
+    q[back++]=temp;
+}
+node pop(){
+    return q[front++];
+}
+bool empty(){
+    return front == back;
+}
+bool valid(int x,int y)
+{
+    return (x>=0 && x<row && y>=0 && y<col);
+}
+bool left(int x,int y){
+    return (map[x][y]==1 || map[x][y]==3 || map[x][y]==6 || map[x][y]==7); LEFT KE LIYE 1 3 6 7 PIPE HN JISSE LEFT MM JAA SKTA HH
+}
+bool right(int x,int y){
+    return (map[x][y]==1 || map[x][y]==3 || map[x][y]==4 || map[x][y]==5); RIGHT KE LIYE 1 3 4 5 PIPE HH JISSE RIGHT JAA SKTA HH 
+}
+bool up(int x,int y){
+    return (map[x][y]==1 || map[x][y]==2 || map[x][y]==4 || map[x][y]==7); UP KE LIYE 1 2 4 7 PIPE HH JISSE UP JAA SKTA HH
+}
+bool down(int x,int y){
+    return (map[x][y]==1 || map[x][y]==2 || map[x][y]==6 || map[x][y]==5); DOWN KE LIYE 1 2 6 5 HH JIISE DOWN JAA SKTA HH
+}
+int solve(int x,int y,int l){
+    int ans = 0;
+    push({x,y,l});
+    visited[x][y]=1;
+    while(!empty()){
+        node cur = pop();
+        int x = cur.x;
+        int y = cur.y;
+        int l = cur.l;
+        if(l==0) continue;
+        ans++;
+        if(valid(x,y-1) && left(x,y) && right(x,y-1) && visited[x][y-1]==0){
+            push({x,y-1,l-1});
+            visited[x][y-1]=1;
+        }
+        if(valid(x,y+1) && right(x,y) && left(x,y+1) && visited[x][y+1]==0){
+            push({x,y+1,l-1});
+            visited[x][y+1]=1;
+        }
+        if(valid(x-1,y) && up(x,y) && down(x-1,y) && visited[x-1][y]==0){
+            push({x-1,y,l-1});
+            visited[x-1][y]=1;
+        }
+        if(valid(x+1,y) && down(x,y) && up(x+1,y) && visited[x+1][y]==0){
+            push({x+1,y,l-1});
+            visited[x+1][y]=1;
+        }
+    }
+    return ans;
+}
+int main(){
+    int t;cin>>t;
+    while(t--){
+        cin>>row>>col>>X>>Y>>L;
+        init();
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                cin>>map[i][j];
+                visited[i][j]=0;
+            }
+        }
+        if(map[X][Y]>0){
+            cout<<solve(X,Y,L)<<endl;
+        }
+        else cout<<0<<endl;
+ 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+ANOTHER SOLUTION
+
+#include<iostream>
+using namespace std;
+ 
+struct node{
+    int x;
+    int y;
+    int l;
+};
+ 
+node q[1000000];
+ 
+int front, back;
+ 
+void init(){
+    front = back = 0;
+}
+ 
+node pop(){
+    return q[front++];
+}
+ 
+void push(int x, int y, int l){
+    q[back].x = x;
+    q[back].y = y;
+    q[back].l = l;
+    back++;
+}
+ 
+bool empty(){
+    return front == back;
+}
+ 
+int a[1000][1000];
+bool vis[1000][1000];
+int n,m,r,c,len;
+int ans;
+ 
+void init2(){
+    for(int i = 0; i<1000; i++){
+        for(int j =0; j<1000; j++){
+            vis[i][j] = false;
+        }
+    }
+}
+ 
+bool valid(int x, int y){
+    return (x>=0 && x<n && y>=0 && y<m && !vis[x][y]);
+}
+ 
+void solve(){
+    
+    if(a[r][c] == 0)return;
+    ans = 1;
+    
+    vis[r][c] = true;
+    push(r,c,1);
+    
+    while(!empty()){
+        
+        node temp = pop();
+        int x = temp.x;
+        int y = temp.y;
+        int l = temp.l;
+        
+        // up 1 2 4 down 1 2 5 6  left 1 3 6 7 right 1 3 4 5
+        
+        //up jana h
+        if(valid(x-1,y) && l+1 <= len)
+            if(a[x-1][y] == 1  || a[x-1][y] ==2 || a[x-1][y] ==5 || a[x-1][y] ==6 )
+                if(a[x][y] == 1 || a[x][y] == 2 || a[x][y] == 4 || a[x][y] == 7){
+                    vis[x-1][y] = true;
+                    push(x-1,y,l+1);
+                    ans++;
+                }
+            
+        // down jana hai
+         if(valid(x+1,y) && l+1 <= len)
+            if(a[x+1][y] == 1  || a[x+1][y] ==2 || a[x+1][y] ==4 || a[x+1][y] ==7 )
+                if(a[x][y] == 1 || a[x][y] == 2 || a[x][y] == 5 || a[x][y] == 6){
+                    vis[x+1][y] = true;
+                    push(x+1,y,l+1);
+                    ans++;
+                }
+                
+        // left jana hai
+         if(valid(x,y-1) && l+1 <= len)
+            if(a[x][y-1] == 1  || a[x][y-1] ==3 || a[x][y-1] ==4 || a[x][y-1] ==5 )
+                if(a[x][y] == 1 || a[x][y] == 3 || a[x][y] == 6 || a[x][y] == 7){
+                    vis[x][y-1] = true;
+                    push(x,y-1,l+1);
+                    ans++;
+                }
+                
+          // right jana jai      
+         if(valid(x,y+1) && l+1 <= len)
+            if(a[x][y+1] == 1  || a[x][y+1] ==3 || a[x][y+1] ==6 || a[x][y+1] ==7 )
+                if(a[x][y] == 1 || a[x][y] == 3 || a[x][y] == 4 || a[x][y] == 5){
+                    vis[x][y+1] = true;
+                    push(x,y+1,l+1);
+                    ans++;
+                }
+            
+    }
+    
+}
+ 
+int main(){
+    
+    
+    int t; cin>>t;
+    while(t--){
+ 
+    cin>>n>>m>>r>>c>>len;
+    
+    for(int i =0; i<n; i++){
+        for(int j =0; j<m; j++){
+            cin>>a[i][j];
+        }
+    }
+    
+     
+     init();
+     init2();
+     
+    ans = -1;
+    solve();
+    cout<<ans<<endl;
+    
+    }
+    return 0;
+}
+
+
+
