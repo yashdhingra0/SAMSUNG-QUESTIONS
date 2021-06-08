@@ -1,0 +1,13 @@
+Node* reverse(Node* p){
+     if(head==NULL)
+         return;
+     if(P->next==NULL){
+         head=p;
+         return;
+     }
+     reverse(p->next);
+     struct Node* q=p->next;
+     q->next=p;
+     p->next=NULL;
+     
+ }
