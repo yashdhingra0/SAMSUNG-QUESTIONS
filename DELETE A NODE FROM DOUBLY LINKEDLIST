@@ -1,0 +1,24 @@
+void deleteNode(Node* head , Node* del)
+{
+    /* base case */
+    if (head== NULL || del == NULL)
+        return;
+ 
+    /* If node to be deleted is head node */
+    if (head == del)
+        head = del->next;
+ 
+    /* Change next only if node to be
+    deleted is NOT the last node */
+    if (del->next != NULL)
+        del->next->prev = del->prev;
+ 
+    /* Change prev only if node to be
+    deleted is NOT the first node */
+    if (del->prev != NULL)
+        del->prev->next = del->next;
+ 
+    /* Finally, free the memory occupied by del*/
+    free(del);
+    return;
+}
