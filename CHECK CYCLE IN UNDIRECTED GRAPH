@@ -1,4 +1,5 @@
 https://sapphireengine.com/@/vychk4
+A cycle exists in a graph if you can start at a node and return to that same node without traversing any edge more than once.
 
 #include <bits/stdc++.h>
 #include <iostream>
@@ -54,3 +55,140 @@ int main(){
     cout<<checkcycle(visited)<<endl;
     
 }
+
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+  public:
+    // Helper function to perform DFS traversal and detect cycle
+    bool dfsCycleCheck(int node, int parent, vector<int> adj[], vector<bool>& visited) {
+        visited[node] = true;  // Mark the current node as visited
+
+        // Recur for all adjacent vertices
+        for (int neighbor : adj[node]) {
+            // If the adjacent vertex is not visited, then recur for that adjacent vertex
+            if (!visited[neighbor]) {
+                if (dfsCycleCheck(neighbor, node, adj, visited)) {
+                    return true;
+                }
+            }
+            // If the adjacent vertex is visited and is not the parent of the current node, then there's a cycle
+            else if (neighbor != parent) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Function to check if there's a cycle in the graph using DFS
+    bool isCyclic(int V, vector<int> adj[]) {
+        vector<bool> visited(V, false);
+
+        // Check for cycles in all components of the graph
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (dfsCycleCheck(i, -1, adj, visited)) {
+                    return true;  // Cycle found
+                }
+            }
+        }
+        return false;  // No cycle found
+    }
+};
+
+int main() {
+    int V = 5;
+    vector<int> adjList[] = {
+        {1, 2},      // Edges from vertex 0 to 1 and 2
+        {0, 3},      // Edges from vertex 1 to 0 and 3
+        {0, 3},      // Edges from vertex 2 to 0 and 3
+        {1, 2, 4},   // Edges from vertex 3 to 1, 2, and 4
+        {3}          // Edge from vertex 4 to 3
+    };
+
+    Solution sol;
+    if (sol.isCyclic(V, adjList)) {
+        cout << "Graph contains a cycle" << endl;
+    } else {
+        cout << "Graph does not contain a cycle" << endl;
+    }
+
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+class Solution {
+  public:
+    // Function to detect a cycle in an undirected graph using BFS
+    bool bfsCycleCheck(int start, vector<int> adj[], vector<bool>& visited) {
+        queue<pair<int, int>> q;  // Pair stores {node, parent}
+        q.push({start, -1});
+        visited[start] = true;
+
+        while (!q.empty()) {
+            int node = q.front().first;
+            int parent = q.front().second;
+            q.pop();
+
+            // Explore all adjacent vertices
+            for (int neighbor : adj[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push({neighbor, node});
+                }
+                // If an adjacent vertex is visited and is not the parent, then there's a cycle
+                else if (neighbor != parent) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Function to check if there's a cycle in the graph using BFS
+    bool isCyclic(int V, vector<int> adj[]) {
+        vector<bool> visited(V, false);
+
+        // Check for cycles in all components of the graph
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                if (bfsCycleCheck(i, adj, visited)) {
+                    return true;  // Cycle found
+                }
+            }
+        }
+        return false;  // No cycle found
+    }
+};
+
+int main() {
+    int V = 5;
+    vector<int> adjList[] = {
+        {1, 2},      // Edges from vertex 0 to 1 and 2
+        {0, 3},      // Edges from vertex 1 to 0 and 3
+        {0, 3},      // Edges from vertex 2 to 0 and 3
+        {1, 2, 4},   // Edges from vertex 3 to 1, 2, and 4
+        {3}          // Edge from vertex 4 to 3
+    };
+
+    Solution sol;
+    if (sol.isCyclic(V, adjList)) {
+        cout << "Graph contains a cycle" << endl;
+    } else {
+        cout << "Graph does not contain a cycle" << endl;
+    }
+
+    return 0;
+}
+
